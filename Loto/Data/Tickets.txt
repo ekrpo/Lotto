@@ -1,0 +1,39 @@
+﻿
+            
+
+            Username:osman
+            Round:2
+            Lotto Combinations: 
+            *Combination 1:33  11  17  10  29  14  
+            *Combination 2:33  25  23  5  9  2  
+            *Combination 3:22  32  12  14  20  11  
+            *Combination 4:9  10  34  20  26  38  
+            *Combination 5:11  4  26  19  13  36  
+            *Combination 6:34  11  24  38  5  9  
+            *Combination 7:8  10  17  34  9  5  
+            *Combination 8:9  16  27  36  5  31  
+            *Combination 9:33  7  14  27  34  11  
+            *Combination 10:21  25  2  10  6  18  
+            
+            Supplementary Number:14
+            Joker Combinations:
+            $Combination 1:8  6  5  4  0  7  
+            $Combination 2:7  0  8  0  6  1  
+            $Combination 3:5  6  8  6  2  1  
+            
+            #
+            
+
+            Username:edin
+            Round:3
+            Lotto Combinations: 
+            *Combination 1:29  12  5  1  37  19  
+            
+            Supplementary Number:35
+            Joker Combinations:
+            $Combination 1:4  6  0  3  3  1  
+            $Combination 2:6  6  8  3  7  0  
+            $Combination 3:8  3  5  7  6  7  
+            
+            #
+            

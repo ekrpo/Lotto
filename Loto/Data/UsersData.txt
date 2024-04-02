@@ -1,0 +1,5 @@
+﻿Username: edin | Password: pass | isAdmin: False
+Username: osman | Password: pass | isAdmin: False
+Username: eldar | Password: Eldar20$ | isAdmin: False
+Username: edo | Password: EdinKrpo22$ | isAdmin: True
+Username: ajsa | Password: AjsaHasandic20$ | isAdmin: False

@@ -2,83 +2,98 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
 using Loto.FileManager;
 
 namespace Loto.modules
 {
     public class Ticket
     {
-        public string Username;
-        public int RoundNumber;
+        public string Username { get; set; }
+        public int RoundNumber { get; set; }
         public int NumberOfCombinations { get; }
         public int CombinationSize { get; }
-        public List<int[]> Combinations = new List<int[]>();
-        public int SupplementaryNumber;
+        public List<int[]> Combinations { get; set; } = new List<int[]>();
+        public int SupplementaryNumber { get; set; }
 
         public int[] PrintedJokerNumber { get; }
-        public int NumberOfJokerCombinations;
-        public List<int[]> JokerCombinations = new List<int[]>();
+        public int NumberOfJokerCombinations { get; set; }
+        public List<int[]> JokerCombinations { get; } = new List<int[]>();
 
+        private static readonly int minimumLottoNumber = 1;
+        private static readonly int maximumLottoNumber = 39;
+        private static readonly int minimumJokerNumber = 0;
+        private static readonly int maximumJokerNumber = 9;
 
-        private static int minimumLottoNumber = 1;
-        private static int maximumLottoNumber = 39;
-        private static int minimumJokerNumber = 0;
-        private static int maximumJokerNumber = 9;
-
-        private int[] GenerateJokerCombination(int size)
+        public Ticket(string username, int numberOfCombinations, int combinationSize)
         {
-            Random random = new Random();
-            int[] combination = new int[size];
-            for (int i = 0; i < size; i++)
-            {
-                int RandomNumber = random.Next(minimumJokerNumber, maximumJokerNumber);
-                combination[i] = RandomNumber;
-            }
-            return combination;
+            Username = username;
+            NumberOfCombinations = numberOfCombinations;
+            CombinationSize = combinationSize;
+            PrintedJokerNumber = GenerateJokerCombination(6); // Joker kombinacija odštampana na listiću random
+            RoundNumber = DrawFileManager.ReadDrawRound() + 1; // Listić odigran za sljedeće izvlačenje
         }
 
+        public Ticket() { }
+
+        // Metoda koja poziva metodu za generisanje Joker kombinacije (koliko puta je i odigrano)
         public void GenerateJokerCombinations()
-        { 
-            for(int i = 0; i < NumberOfJokerCombinations; i++)
+        {
+            for (int i = 0; i < NumberOfJokerCombinations; i++)
             {
+                // Prvi Joker broj će biti već generisan uz listić
                 if (i == 0)
                 {
                     JokerCombinations.Add(PrintedJokerNumber);
                     continue;
                 }
+                // Ostali Joker brojevi bit će ovdje nasumično generisani
                 JokerCombinations.Add(GenerateJokerCombination(6));
             }
         }
+
+        // Metoda za generisanje pojedinačne Joker kombinacije 
+        public static int[] GenerateJokerCombination(int size)
+        {
+            Random random = new Random();
+            int[] combination = new int[size];
+            for (int i = 0; i < size;)
+            {
+                int randomNumber = random.Next(minimumJokerNumber, maximumJokerNumber);
+                if (combination.Contains(randomNumber)) continue; // Ne dozvoliti dva ista broja u jednoj kombinaciji
+                combination[i] = randomNumber;
+                i++;
+            }
+            return combination;
+        }
+
         public static int[] GenerateLottoCombination(int size)
         {
             Random random = new Random();
             int[] combination = new int[size];
             for (int i = 0; i < size;)
             {
-                int RandomNumber = random.Next(minimumLottoNumber, maximumLottoNumber);
-                if (combination.Contains(RandomNumber)) continue;
-                combination[i] = RandomNumber;
+                int randomNumber = random.Next(minimumLottoNumber, maximumLottoNumber);
+                if(combination.Contains(randomNumber)) continue; // Ne dozvoliti dva ista broja u jednoj kombinaciji
+                combination[i] = randomNumber;
                 i++;
             }
-            return combination; 
-        }
-        public static string FormatCombinations(List<int[]> combinations, bool IsLotto)
-        {
-            string FormatedCombinations = "";
-            for (int i = 0; i < combinations.Count; i++)
-            {
-                FormatedCombinations += IsLotto ? $"*Combination {i + 1}:" : $"$Combination {i + 1}:";
-                foreach (int num in combinations[i])
-                {
-                    FormatedCombinations += $"{num}  ";
-                }
-                FormatedCombinations += "\n            ";
-            }
-            return FormatedCombinations;
+            return combination;
         }
 
+        // Metoda koja inicijalizuje spašavanje Tiketa
+        public void SaveTicket()
+        {
+            TicketFileManager.SaveTicket(FormatForFile());
+        }
+
+        // Metoda za random generisanje dopunskog broja od 1 do 39
+        public static int GenerateSupplementaryNumber()
+        {
+            Random random = new Random();
+            return random.Next(minimumLottoNumber, maximumLottoNumber);
+        }
+
+        // Metoda za formatiranje tiketa za fajl
         public string FormatForFile()
         {
             return $@"
@@ -93,64 +108,36 @@ namespace Loto.modules
             ";
         }
 
-        public static int[] FormatCombinationsFromFile(string CombinationString)
+        // Posebna metoda za formatiranje kombinacija(nizova) za fajl
+        private string FormatCombinations(List<int[]> combinations, bool isLotto)
         {
-            string[] CombinationChars = CombinationString.Split("  "); 
-            int[] CombinationNumbers = new int[CombinationChars.Length];
-            for (int i = 0; i<CombinationChars.Length; i++)
+            var formattedCombinations = new StringBuilder();
+            for (int i = 0; i < combinations.Count; i++)
             {
-                if (!string.IsNullOrWhiteSpace(CombinationChars[i]))
-                {
-                    CombinationNumbers[i] = int.Parse(CombinationChars[i]);
-                }
+                formattedCombinations.Append(isLotto ? "*Combination " : "$Combination ");
+                formattedCombinations.Append($"{i + 1}: ");
+                formattedCombinations.Append(string.Join(" ", combinations[i]));
+                formattedCombinations.AppendLine();
+                // Lotto ex. *Combination 1: 11 22 33 4 5 6
+                // Joker ex. $Combination 1: 11 22 33 4 5 6
             }
-            return CombinationNumbers;
+            return formattedCombinations.ToString();
         }
+public override string ToString()
+{
+return $@"#######################Ticket###############################
 
-        public void SaveTicket()
-        {
-            TicketFileManager.SaveTicket(FormatForFile());
-        }
+Round: {this.RoundNumber}       Owner: {this.Username}
 
-        public static int GenerateSupplementaryNumber()
-        {
-            Random random = new Random();
-            return random.Next(minimumLottoNumber, maximumLottoNumber);
-        }
+Lotto Combinations
+{FormatCombinations(this.Combinations, true)}
+Supplementary number: {SupplementaryNumber.ToString() ?? "/"}
 
-        public Ticket(string username, int numberOfCombinations, int combinationSize)
-        {
-            this.Username = username;
-            this.PrintedJokerNumber = this.GenerateJokerCombination(6);
-            this.RoundNumber = DrawFileManager.ReadDrawRound() + 1;
-            this.NumberOfCombinations = numberOfCombinations;
-            this.CombinationSize = combinationSize;
-        }
-
-
-        public Ticket(string username, List<int[]> combinations, int supplementaryNumber, List<int[]> jokerCombinations, int roundNumber)
-        {
-            Username = username;
-            Combinations = combinations;
-            SupplementaryNumber = supplementaryNumber;
-            JokerCombinations = jokerCombinations;
-            RoundNumber = roundNumber;
-        }
-
-        public Ticket(){ }
-
-        public override string ToString()
-        {
-            return $@"#######################Ticket###############################
-            Round: {this.RoundNumber}       Owner: {this.Username}
-
-            Lotto Combinations
-            {FormatCombinations(this.Combinations, true)}
-            Supplementary number: {this.SupplementaryNumber.ToString() ?? "/"}
-
-            Joker Combinations
-            {FormatCombinations(this.JokerCombinations, false)}
+Joker Combinations
+{FormatCombinations(this.JokerCombinations, false)}
 #######################Ticket###############################";
         }
     }
+
+
 }

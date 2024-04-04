@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Loto.Validations
 {
+    // Metode koje ispituju validnost unesenih podataka od strane korisnika
+    // Koriste se razne ugrađene metode i if naredba
     public class TicketValidation
     {
 

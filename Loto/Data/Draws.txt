@@ -1,8 +1,8 @@
 
-            Round:3
-            Date:2024-04-02
-            WinningSupplementaryNumber:18
-            LottoWinningCombination:1 7 14 5 8 37
-            JokerWinningCombination:1 7 4 5 8 7
+            Round:1
+            Date:2024-04-04
+            WinningSupplementaryNumber:28
+            LottoWinningCombination:35 6 2 38 8 3
+            JokerWinningCombination:5 6 2 8 8 3
             #
             

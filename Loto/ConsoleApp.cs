@@ -9,71 +9,131 @@ using Loto.Validations;
 
 namespace Loto
 {
+    /*
+        KLASA ZA INTERAKCIJU KORISNIKA KROZ KONZOLU
+        Pattern svih metoda u klasi:
+        Obično sadrži metode koje daku upute korisniku za unos
+        Potom omogućavaju korisniku unos i pretvaraju u neki tip podataka
+        Potom validiraju korisnički unos
+        A zatim obavještavaju o rezultatu unosa
+        Metoda se ponavlaj sve dok korisnik ne unese ispravno 
+        Gresške se hvataju i ispisuju bez prekida programa
+    */
     public class ConsoleApp
     {
         public static int EnterNumberOfCombination()
         {
-            Console.WriteLine("How many combinations of LOTO 6/39 you want to play? (1 - 10)");
-            int NumberOfCombinations = Convert.ToInt32(Console.ReadLine());
-            TicketValidation.ValidateNumberOfCombination(NumberOfCombinations);
-            return NumberOfCombinations;
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("How many combinations of LOTO 6/39 you want to play? (1 - 10)");
+                    int NumberOfCombinations = Convert.ToInt32(Console.ReadLine());
+                    TicketValidation.ValidateNumberOfCombination(NumberOfCombinations);
+                    return NumberOfCombinations;
+                }
+                catch (Exception ex) { Console.WriteLine(ex.Message); }
+            }
+
         }
 
         public static int EnterSystemCombinationSize()
         {
-            Console.WriteLine("How many numbers in combination you want? (7 - 16)");
-            int CombinationSize = Convert.ToInt32(Console.ReadLine());
-            TicketValidation.ValidateSystemCombinationSize(CombinationSize);
-            return CombinationSize;
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("How many numbers in combination you want? (7 - 16)");
+                    int CombinationSize = Convert.ToInt32(Console.ReadLine());
+                    TicketValidation.ValidateSystemCombinationSize(CombinationSize);
+                    return CombinationSize;
+                }
+                catch (Exception ex) { Console.WriteLine(ex.Message); }
+            }
+
         }
 
         public static int EnterPartialCombinationSize()
         {
-            Console.WriteLine("How many numbers in combination you want? (9 - 23)");
-            int CombinationSize = Convert.ToInt32(Console.ReadLine());
-            TicketValidation.ValidatePartialCombinationSize(CombinationSize);
-            return CombinationSize;
+            while(true)
+            {
+                try
+                {
+                    Console.WriteLine("How many numbers in combination you want? (9 - 23)");
+                    int CombinationSize = Convert.ToInt32(Console.ReadLine());
+                    TicketValidation.ValidatePartialCombinationSize(CombinationSize);
+                    return CombinationSize;
+                }
+                catch(Exception ex) { Console.WriteLine(ex.Message); }
+            }
+
         }
 
         public static int EnterYesNo(string message)
         {
-            Console.WriteLine(message);
-            int SaveOption = Convert.ToInt32(Console.ReadLine());
-            TicketValidation.ValidateSaveOption(SaveOption);
-            return SaveOption;
+            while (true)
+            {
+                try
+                {
+
+                    Console.WriteLine(message);
+                    int SaveOption = Convert.ToInt32(Console.ReadLine());
+                    TicketValidation.ValidateSaveOption(SaveOption);
+                    return SaveOption;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    continue; 
+                }
+            }
+           
         }
 
         private static int[] EnterCombination(int size)
         {
-            int[] Combination = new int[size];
-            if (EnterYesNo("Do you want to random generate this combination? (1 - Yes  2 - No)") == 1)
+            while (true)
             {
-               Combination = Ticket.GenerateLottoCombination(size);
-            }
-            else 
-            {
-                int i = 0;
-                Console.WriteLine("Enter numbers in your combination");
-                while (i < size)
+                try
                 {
-                    Console.Write($"Enter {i + 1} number: ");
-                    try
+                    int[] Combination = new int[size];
+                    if (EnterYesNo("Do you want to random generate this combination? (1 - Yes  2 - No)") == 1)
                     {
-                        int EnteredNumber = Convert.ToInt32(Console.ReadLine());
-                        TicketValidation.ValidateCombinationMember(EnteredNumber, Combination);
-                        Combination[i] = EnteredNumber;
+                        Combination = Ticket.GenerateLottoCombination(size);
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Console.WriteLine(e.Message);
-                        continue;
-                    }
-                    i++;
+                        int i = 0;
+                        Console.WriteLine("Enter numbers in your combination");
+                        while (i < size)
+                        {
+                            Console.Write($"Enter {i + 1} number: ");
+                            try
+                            {
+                                int EnteredNumber = Convert.ToInt32(Console.ReadLine());
+                                TicketValidation.ValidateCombinationMember(EnteredNumber, Combination);
+                                Combination[i] = EnteredNumber;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                                continue;
+                            }
+                            i++;
 
+                        }
+                    }
+                    return Combination;
                 }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                
             }
             
-            return Combination;
+            
+
         }
 
         public static List<int[]> EnterCombinations(int numberOfCombinations, int combinationSize)
@@ -218,10 +278,15 @@ namespace Loto
         {
             while (true)
             {
-                Console.WriteLine("Enter an number: 1 - Register 2 - Login: ");
+                Console.WriteLine("Select Register or Login option: 1 - Register 2 - Login: ");
                 try
                 {
-                    int OptionNumber = Convert.ToInt32(Console.ReadLine());
+                    int OptionNumber = int.Parse(Console.ReadLine());
+                    if(OptionNumber != 1 && OptionNumber != 2)
+                    {
+                        Console.WriteLine("Invalid input, enter 1 or 2");
+                        continue;
+                    }
                     return OptionNumber;
                 }
                 catch (Exception e) { Console.WriteLine(e.Message); continue; }

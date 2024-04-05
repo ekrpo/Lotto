@@ -128,9 +128,9 @@ namespace Loto.Modules
         private static int CountJokerHits(List<int[]> ticketCombinations, int[] winningJokerCombination)
         {
             int hits = 0;
-            for(int i = 0; i<ticketCombinations.Count();)
-            {              
-                for (int j = winningJokerCombination.Count()-1; j>0; j--)
+            for (int i = 0; i < ticketCombinations.Count(); i++) 
+            {
+                for (int j = winningJokerCombination.Count() - 1; j > 0; j--)
                 {
                     if (ticketCombinations[i][j] == winningJokerCombination[j])
                     {
@@ -140,11 +140,12 @@ namespace Loto.Modules
                     {
                         break;
                     }
-                    
+
                 }
             }
             return hits;
         }
+
 
 
         // Metoda koja provjerava da li korisnik sa username već postoji

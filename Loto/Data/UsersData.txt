@@ -1,3 +1,4 @@
 ﻿Username: admin | Password: admin | isAdmin: True
 
 Username: edin | Password: EdinKrpo22$ | isAdmin: False
+Username: ahmed | Password: AhmedAjan22$ | isAdmin: False

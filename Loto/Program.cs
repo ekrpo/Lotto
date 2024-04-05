@@ -20,7 +20,7 @@ namespace Loto
                 RegisterUser();
             }
             else if(AuthOption == 2) // Login
-            {
+            {               
                 LoginUser();
             }
 
@@ -92,7 +92,7 @@ namespace Loto
         static void CheckForWinAndCreateTicket()
         {
             User.CheckForWin(ActiveUsername);
-            while (repeat)
+            while (true)
             {
                 CreateTicket();
             }
